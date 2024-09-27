@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turing Machine Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: left;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        #tape {
+            font-family: monospace;
+            margin: 20px 0;
+        }
+        input, textarea {
+            width: 100%;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Turing Machine Simulation</h1>
+        <p>This is a simple Turing Machine simulator. You can modify both the input data on the tape and the set of instructions (state transitions) for the Turing Machine. The example below demonstrates a machine that increments a binary number on the tape.</p>
+        
+        <h2>Tape (Input)</h2>
+        <p>Enter a binary number (e.g., "0010110"):</p>
+        <input type="text" id="inputTape" value="0010110" />
+
+        <h2>Instructions (State Transitions)</h2>
+        <p>The instructions define how the machine processes the tape. Each state reads the current symbol on the tape, writes a new symbol, moves the head (left or right), and transitions to a new state. Here is an example for incrementing a binary number:</p>
+        <textarea id="instructions" rows="10">
+        {
+            "q0": {
+                "0": ["1", "L", "halt"],
+                "1": ["0", "L", "q0"]
+            }
+        }
+        </textarea>
+
+        <button onclick="runTuringMachine()">Run Turing Machine</button>
+
+        <h2>Result</h2>
+        <pre id="tape"></pre>
+
+        <h2>Explanation</h2>
+        <p><strong>Input (Tape):</strong> The input tape consists of a binary number. The Turing Machine will read each symbol, one by one, and apply the specified instructions.</p>
+        <p><strong>Instructions:</strong> The instructions determine the machine's behavior. Each state provides a rule for each possible symbol on the tape (e.g., '0' or '1'). The rule specifies the new symbol to write, the direction to move the head (L for left, R for right), and the next state.</p>
+        <p><strong>Incrementing the Binary Number:</strong> The example provided increments a binary number on the tape. Starting from the right, the machine turns each '1' into a '0' until it encounters a '0', which is turned into a '1'. This simulates the binary incrementation process.</p>
+        <p><strong>Halt State:</strong> Once the machine finishes the incrementation, it enters the 'halt' state, which stops further computation.</p>
+    </div>
+
+    <script>
+        function runTuringMachine() {
+            const tapeInput = document.getElementById('inputTape').value;
+            const instructionsInput = document.getElementById('instructions').value;
+
+            let tape = tapeInput.split('');
+            let instructions;
+            try {
+                instructions = JSON.parse(instructionsInput);
+            } catch (e) {
+                alert("Invalid instructions format. Please provide a valid JSON.");
+                return;
+            }
+
+            let currentState = "q0";
+            let headPosition = tape.length - 1;  // Start from the rightmost bit
+            let stepLimit = 1000; // Maximum steps to avoid infinite loops
+            let steps = 0;
+
+            while (currentState !== 'halt' && steps < stepLimit) {
+                const currentSymbol = tape[headPosition] || "0"; // Assume blank symbol is 0
+                const instruction = instructions[currentState] && instructions[currentState][currentSymbol];
+
+                if (!instruction) {
+                    break; // No valid transition, stop execution
+                }
+
+                const [writeSymbol, direction, nextState] = instruction;
+                tape[headPosition] = writeSymbol;
+
+                if (direction === "R") {
+                    headPosition++;
+                } else if (direction === "L") {
+                    headPosition--;
+                    if (headPosition < 0) {
+                        tape.unshift("0"); // Expand tape on the left if necessary
+                        headPosition = 0;
+                    }
+                }
+
+                currentState = nextState;
+                steps++;
+            }
+
+            document.getElementById('tape').textContent = tape.join('');
+        }
+    </script>
+    <a href="index.html">Back to main page</a>
+</body>
+</html>
+

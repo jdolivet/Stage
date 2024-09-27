@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Turing Test</title>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        #chatbox {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>The Turing Test</h1>
+    <p>One of Turing's most famous contributions was the development of what became known as the "Turing Test." This test was designed to determine a machine's ability to exhibit intelligent behavior indistinguishable from that of a human.</p>
+    <h2>How the Turing Test Works</h2>
+    <p>The Turing Test involves a human evaluator who interacts with a machine and another human. If the evaluator cannot reliably distinguish the machine from the human, the machine is said to have passed the test.</p>
+    
+      <h1>ELIZA - Simulating a Rogerian Psychotherapist</h1>
+    <div id="chatbox"></div>
+    <input type="text" id="userInput" placeholder="Type your message here..." />
+    <button onclick="sendMessage()">Send</button>
+
+    <h2>Functionality</h2>
+    <p>This is a simple simulation of the ELIZA program, which imitates a Rogerian psychotherapist. The application displays user messages and responds with pre-defined phrases encouraging the user to express themselves further.</p>
+
+    <h2>Usage</h2>
+    <p>1. Type a message in the input field.</p>
+    <p>2. Click the "Send" button to display your message.</p>
+    <p>3. After a short delay, ELIZA will respond with an encouraging phrase from its set of predefined responses.</p>
+
+    <script>
+        const responses = [
+            "Tell me more about that.",
+            "How does that make you feel?",
+            "Why do you say that?",
+            "I see. Can you elaborate on that?",
+            "What do you mean by that?",
+            "That's interesting. Please continue.",
+            "How does that affect your life?",
+            "Can you explain further?",
+            "What are your thoughts on this?",
+            "I'm listening. Go on."
+        ];
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const userMessage = input.value.trim();
+
+            if (userMessage) {
+                // Display user message
+                const chatbox = document.getElementById('chatbox');
+                chatbox.innerHTML += `<strong>You:</strong> ${userMessage}<br>`;
+                input.value = '';
+
+                // Simulate ELIZA's response
+                setTimeout(() => {
+                    const elizaResponse = responses[Math.floor(Math.random() * responses.length)];
+                    chatbox.innerHTML += `<strong>ELIZA:</strong> ${elizaResponse}<br>`;
+                    chatbox.scrollTop = chatbox.scrollHeight; // Scroll to bottom
+                }, 500);
+            }
+        }
+    </script>
+
+    
+    <a href="index.html">Back to main page</a>
+</body>
+</html>
+
